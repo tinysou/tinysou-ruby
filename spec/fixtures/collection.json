@@ -1,0 +1,10 @@
+{
+  "name": "posts",
+  "field_types": {
+    "title": "string",
+    "tags": "string",
+    "author": "enum",
+    "date": "enum",
+    "body": "text"
+  }
+}
