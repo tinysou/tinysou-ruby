@@ -1,9 +1,11 @@
+#!/usr/bin/env ruby
 require 'tinysou'
 
 TOKEN = 'YOUR_TOKEN'
+ENGINE = 'YOUR_ENGINE_NAME'
 
 engine = {
-  name: 'YOUR-BLOG',
+  name: ENGINE,
   display_name: 'My Blog'
 }
 
@@ -28,40 +30,34 @@ document = {
 
 client = Tinysou::Client.new TOKEN
 
-# Engine
-client.engines
+tasks = {
+  engines: -> { client.engines },
+  create_engine: -> { client.create_engine engine },
+  engine: -> { client.engine engine[:name] },
+  update_engine: -> { client.update_engine engine[:name], engine },
+  destroy_engine: -> { client.destroy_engine engine[:name] },
+  collections: -> { client.collections engine[:name] },
+  create_collection: -> { client.create_collection engine[:name], collection },
+  collection: -> { client.collection engine[:name], collection[:name] },
+  destroy_collection: -> { client.destroy_collection engine[:name], collection[:name] },
+  documents: -> { client.documents engine[:name], collection[:name], page: 0, per_page: 20 },
+  create_document: -> { client.create_document engine[:name], collection[:name], document },
+  update_document: lambda do
+    id = client.documents(engine[:name], collection[:name]).first[:id]
+    client.update_document engine[:name], collection[:name], id, document
+  end,
+  destroy_document: lambda do
+    id = client.documents(engine[:name], collection[:name]).first[:id]
+    client.destroy_document engine[:name], collection[:name], id
+  end,
+  search: -> { client.search engine[:name], q: 'first', c: collection[:name] },
+  autocomplete: -> { client.autocomplete engine[:name], q: 'fi', c: collection[:name] }
+}
 
-client.create_engine engine
-
-client.engine engine[:name]
-
-client.update_engine engine[:name], display_name: 'My Blog'
-
-client.destroy_engine engine[:name]
-
-# Collection
-client.collections engine[:name]
-
-client.create_collection engine[:name], collection
-
-client.collection engine[:name], collection[:name]
-
-client.destroy_collection engine[:name], collection[:name]
-
-# Document
-client.documents engine[:name], collection[:name], page: 0, per_page: 20
-
-doc = client.create_document engine[:name], collection[:name], document
-
-client.document engine[:name], collection[:name], doc['id']
-
-client.update_document engine[:name], collection[:name], doc['id'],
-                       document
-
-client.destroy_document engine[:name], collection[:name], doc['id']
-
-# Search
-client.search engine[:name], q: 'first', c: collection[:name]
-
-# Autocomplete
-client.autocomplete engine[:name], q: 'first', c: collection[:name]
+if ARGV[0]
+  arg = ARGV[0].to_sym
+  p tasks[arg].call if tasks.include? arg
+else
+  puts 'Available arguments:'
+  tasks.each { |k, _| puts k.to_s }
+end
