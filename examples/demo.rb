@@ -3,8 +3,8 @@ require 'tinysou'
 TOKEN = 'YOUR_TOKEN'
 
 engine = {
-  name: 'YOUR-blog',
-  display_name: 'Blog'
+  name: 'YOUR-BLOG',
+  display_name: 'My Blog'
 }
 
 collection = {
@@ -56,12 +56,12 @@ doc = client.create_document engine[:name], collection[:name], document
 client.document engine[:name], collection[:name], doc['id']
 
 client.update_document engine[:name], collection[:name], doc['id'],
-                       title: 'First Post'
+                       document
 
 client.destroy_document engine[:name], collection[:name], doc['id']
 
 # Search
-client.search engine[:name], collection[:name], q: 'tinysou'
+client.search engine[:name], q: 'first', c: collection[:name]
 
 # Autocomplete
-client.autocomplete engine[:name], collection[:name], q: 't'
+client.autocomplete engine[:name], q: 'first', c: collection[:name]

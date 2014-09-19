@@ -1,5 +1,5 @@
 def tinysou_url(path)
-  "http://api.tinysou.com/v1#{path}"
+  "http://api.tinysou.com/v1/#{path}"
 end
 
 def stub_get(path)

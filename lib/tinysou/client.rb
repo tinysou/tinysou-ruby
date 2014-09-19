@@ -1,8 +1,17 @@
 require 'tinysou/version'
+require 'tinysou/client/engines'
+require 'tinysou/client/collections'
+require 'tinysou/client/documents'
+require 'tinysou/client/search'
 
 module Tinysou
   # Client for the Tinysou API
   class Client
+    include Tinysou::Client::Engines
+    include Tinysou::Client::Collections
+    include Tinysou::Client::Documents
+    include Tinysou::Client::Search
+
     attr_accessor :token
 
     def initialize(token)
@@ -44,9 +53,11 @@ module Tinysou
       if res.status == 204
         true
       elsif res.status > 400
-        fail "status: #{res.status}, error: #{res.body}"
-      else
+        fail res.body
+      elsif !(res.body.nil? || res.body.empty?)
         MultiJson.load(res.body, symbolize_keys: true)
+      else
+        nil
       end
     end
   end

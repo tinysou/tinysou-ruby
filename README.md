@@ -131,13 +131,13 @@ client.destroy_document 'blog', 'posts', '293ddf9205df9b36ba5761d61ca59a29'
 ### Search
 
 ```ruby
-client.search 'blog', 'posts', q: 'tinysou'
+client.search 'blog', q: 'tinysou', c: 'posts'
 ```
 
 ### Autocomplete
 
 ```ruby
-client.autocomplete 'blog', 'posts', q: 't'
+client.autocomplete 'blog', q: 't', c: 'posts'
 ```
 
 ## Contributing
