@@ -133,7 +133,22 @@ client.destroy_document 'blog', 'posts', '293ddf9205df9b36ba5761d61ca59a29'
 ### Search
 
 ```ruby
-client.search 'blog', q: 'tinysou', c: 'posts'
+client.search 'blog', {
+    q: 'tinysou', c: 'posts',
+    page: 0, per_parge: 10,
+    filter: {
+        range: {
+            field: "date",
+            from: "2014-07-01T00:00:00Z",
+            to: "2014-08-01T00:00:00Z"
+        }
+    },
+    sort: {
+        field: "date",
+        order: "asc",
+        mode: "avg"
+    }
+}
 ```
 
 ### Autocomplete
@@ -142,9 +157,13 @@ client.search 'blog', q: 'tinysou', c: 'posts'
 client.autocomplete 'blog', q: 't', c: 'posts'
 ```
 
+## Examples
+
+See [examples](https://github.com/tinysou/tinysou-ruby/tree/master/examples)
+
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/tinysou/fork )
+1. Fork it ( https://github.com/tinysou/tinysou-ruby/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
